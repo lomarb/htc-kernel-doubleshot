@@ -54,7 +54,13 @@
 						struct msmfb_mixer_info_req)
 #define MSMFB_OVERLAY_PLAY_WAIT _IOWR(MSMFB_IOCTL_MAGIC, 149, \
 						struct msmfb_overlay_data)
+
 #define MSMFB_WRITEBACK_INIT _IO(MSMFB_IOCTL_MAGIC, 150)
+
+/* The QCT latest code base is used, adding on 2/9/2012 */
+#define MSMFB_WRITEBACK_START _IO(MSMFB_IOCTL_MAGIC, 151)
+#define MSMFB_WRITEBACK_STOP _IO(MSMFB_IOCTL_MAGIC, 152)
+
 #define MSMFB_WRITEBACK_REGISTER_BUFFER _IOW(MSMFB_IOCTL_MAGIC, 151, \
 						struct msmfb_writeback_data)
 #define MSMFB_WRITEBACK_UNREGISTER_BUFFER _IOW(MSMFB_IOCTL_MAGIC, 152, \
@@ -74,6 +80,9 @@
 #define FB_TYPE_3D_PANEL 0x10101010
 #define MDP_IMGTYPE2_START 0x10000
 #define MSMFB_DRIVER_VERSION	0xF9E8D701
+
+#define MSMFB_GET_USB_PROJECTOR_INFO _IOR(MSMFB_IOCTL_MAGIC, 301, struct msmfb_usb_projector_info)
+#define MSMFB_SET_USB_PROJECTOR_INFO _IOW(MSMFB_IOCTL_MAGIC, 302, struct msmfb_usb_projector_info)
 
 enum {
 	NOTIFY_UPDATE_START,
@@ -149,7 +158,9 @@ enum {
 #define MDP_DEINTERLACE_ODD		0x00400000
 #define MDP_OV_PLAY_NOWAIT		0x00200000
 #define MDP_SOURCE_ROTATED_90		0x00100000
+#define MDP_MEMORY_ID_TYPE_FB		0x00001000
 #define MDP_DPP_HSIC			0x00080000
+#define MDP_BACKEND_COMPOSITION		0x00040000
 #define MDP_BORDERFILL_SUPPORTED	0x00010000
 #define MDP_SECURE_OVERLAY_SESSION	0x00008000
 #define MDP_MEMORY_ID_TYPE_FB		0x00001000
@@ -454,6 +465,10 @@ struct msmfb_mixer_info_req {
 	struct mdp_mixer_info info[MAX_PIPE_PER_MIXER];
 };
 
+struct msmfb_usb_projector_info {
+	int usb_offset;
+	int latest_offset;
+};
 
 #ifdef __KERNEL__
 
@@ -461,6 +476,11 @@ struct msmfb_mixer_info_req {
 int get_fb_phys_info(unsigned long *start, unsigned long *len, int fb_num);
 struct fb_info *msm_fb_get_writeback_fb(void);
 int msm_fb_writeback_init(struct fb_info *info);
+
+/* The QCT latest code base is used, adding on 2/9/2012 */
+int msm_fb_writeback_start(struct fb_info *info);
+int msm_fb_writeback_stop(struct fb_info *info);
+
 int msm_fb_writeback_register_buffer(struct fb_info *info,
 		struct msmfb_writeback_data *data);
 int msm_fb_writeback_queue_buffer(struct fb_info *info,
